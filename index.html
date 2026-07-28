@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panda Explorer · Тренажёры китайского</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;600;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+<header>
+  <svg class="mascot" viewBox="0 0 64 64" aria-hidden="true">
+    <ellipse cx="17" cy="21" rx="8" ry="8" fill="#23201F"/>
+    <ellipse cx="47" cy="21" rx="8" ry="8" fill="#23201F"/>
+    <ellipse cx="32" cy="36" rx="21" ry="19" fill="#fff" stroke="#23201F" stroke-width="2.4"/>
+    <ellipse cx="24" cy="35" rx="6" ry="7" fill="#23201F"/>
+    <ellipse cx="40" cy="35" rx="6" ry="7" fill="#23201F"/>
+    <circle cx="25" cy="34" r="2.2" fill="#fff"/><circle cx="41" cy="34" r="2.2" fill="#fff"/>
+    <ellipse cx="32" cy="44" rx="3.4" ry="2.6" fill="#23201F"/>
+    <path d="M8 20 Q32 10 56 20 Q32 25 8 20Z" fill="#3E7B5E"/>
+    <path d="M20 20 Q32 2 44 20Z" fill="#3E7B5E"/>
+    <path d="M20 17 Q32 13 44 17" stroke="#D6402C" stroke-width="3" fill="none"/>
+  </svg>
+  <div class="brand">Panda Explorer<small>Тренажёры китайского</small></div>
+</header>
+
+<p class="section-label">Выбери себя</p>
+<div class="students" id="list"></div>
+<p class="hint" style="margin-top:22px">Прогресс сохраняется прямо в браузере — заходи с того же устройства.</p>
+</div>
+
+<script>
+const STUDENTS=[
+  {id:"lera", av:"🐼", name:"Лера"},
+  {id:"katya",av:"🐰", name:"Катя"},
+  {id:"askar",av:"🐯", name:"Аскар"}
+];
+const list=document.getElementById('list');
+list.innerHTML=STUDENTS.map(s=>
+  `<a class="student" href="app.html?student=${s.id}">
+     <div class="av">${s.av}</div><div class="nm">${s.name}</div>
+     <div class="sub" id="sub-${s.id}">…</div></a>`).join('');
+STUDENTS.forEach(async s=>{
+  const el=document.getElementById('sub-'+s.id);
+  try{
+    const d=await (await fetch('data/'+s.id+'.json')).json();
+    const w=d.topics.reduce((a,t)=>a+t.w.length,0);
+    el.textContent=`${d.topics.length} тем · ${w} слов`;
+  }catch(e){el.textContent='словарь не найден'}
+});
+</script>
+</body>
+</html>
